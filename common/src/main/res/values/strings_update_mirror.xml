@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">Update source</string>
+    <string name="update_mirror_description">Route update checks and downloads through this line. A mirror is a third-party service and can go down; the APK is still verified with SHA-256.</string>
+</resources>

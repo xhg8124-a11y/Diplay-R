@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">업데이트 소스</string>
+    <string name="update_mirror_description">업데이트 확인과 다운로드가 통과하는 경로입니다. 미러는 제3자 서비스로 중단될 수 있으며, APK는 여전히 SHA-256으로 검증됩니다.</string>
+</resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">Origine aggiornamenti</string>
+    <string name="update_mirror_description">Percorso usato dal controllo e dal download degli aggiornamenti. Un mirror è un servizio di terze parti e può smettere di funzionare; l\'APK resta verificato con SHA-256.</string>
+</resources>

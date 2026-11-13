@@ -15,3 +15,6 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 - The in-app updater now tracks this repository's releases instead of upstream DiPlay, so an
   upstream release can no longer replace the Feifan F7 support. First release: v0.2.23-r1
   (versionCode 42), signed with the fork's own key.
+- About page offers an update source choice: direct GitHub or the gh-proxy.com mirror for
+  mainland-China drivers. Checks and downloads follow the chosen route; the catalog still
+  validates the GitHub URLs and the APK keeps its SHA-256 verification.

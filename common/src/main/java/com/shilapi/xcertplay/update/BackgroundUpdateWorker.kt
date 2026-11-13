@@ -47,6 +47,7 @@ internal class BackgroundUpdateWorker(context: Context, parameters: WorkerParame
                 installedVersion = installedVersion,
                 userAgent = "DiPlay/$installedVersion",
                 openConnection = network::openConnection,
+                mirror = UpdateMirror.load(applicationContext),
             )
             if (release == null) UpdateAvailability.clear(applicationContext)
             else UpdateAvailability.save(applicationContext, release)

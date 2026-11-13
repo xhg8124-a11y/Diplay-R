@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">Источник обновлений</string>
+    <string name="update_mirror_description">Маршрут проверки и загрузки обновлений. Зеркало — сторонний сервис и может перестать работать; APK по-прежнему проверяется по SHA-256.</string>
+</resources>

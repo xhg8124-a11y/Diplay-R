@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">Güncelleme kaynağı</string>
+    <string name="update_mirror_description">Güncelleme kontrolleri ve indirmelerin izlediği hat. Yansı üçüncü taraf bir hizmettir ve erişilemez hale gelebilir; APK yine de SHA-256 ile doğrulanır.</string>
+</resources>

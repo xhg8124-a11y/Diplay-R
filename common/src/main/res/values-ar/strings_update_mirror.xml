@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">مصدر التحديث</string>
+    <string name="update_mirror_description">المسار الذي يمر به التحقق من التحديثات وتنزيلها. المرآة خدمة خارجية وقد تتوقف؛ يظل ملف APK مُتحققًا منه بـ SHA-256.</string>
+</resources>

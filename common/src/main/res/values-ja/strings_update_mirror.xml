@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">アップデート取得元</string>
+    <string name="update_mirror_description">アップデートの確認とダウンロードに使う経路です。ミラーはサードパーティのサービスで、停止することがあります。APK は SHA-256 で検証されます。</string>
+</resources>

@@ -8,9 +8,10 @@ internal object UpdateReleaseLookup {
         installedVersion: String,
         userAgent: String,
         openConnection: (URL) -> URLConnection = { it.openConnection() },
+        mirror: UpdateMirror = UpdateMirror.GITHUB,
     ): UpdateRelease? {
         val json = UpdateClient.fetchText(
-            UpdateClient.RELEASES_URL,
+            mirror.proxied(UpdateClient.RELEASES_URL),
             "application/vnd.github+json",
             userAgent,
             openConnection,

@@ -98,6 +98,7 @@ import com.shilapi.xcertplay.update.UpdateAvailability
 import com.shilapi.xcertplay.update.UpdateCatalog
 import com.shilapi.xcertplay.update.UpdateChecksums
 import com.shilapi.xcertplay.update.UpdateClient
+import com.shilapi.xcertplay.update.UpdateMirror
 import com.shilapi.xcertplay.update.UpdateRelease
 import com.shilapi.xcertplay.update.UpdateReleaseLookup
 import java.io.File
@@ -2531,6 +2532,14 @@ class DiPlayActivity : ComponentActivity(), AppAppearanceOwner {
         section(content, getString(R.string.about_public_preview_prefix, version())) { card ->
             card.addView(label(getString(R.string.an_independent_carplay_receiver_for_android_head_units_wir), 17, TEXT))
             card.addView(updateRow())
+            val mirrors = UpdateMirror.entries
+            choice(card, getString(R.string.update_mirror), mirrors.map { it.label },
+                mirrors.indexOf(UpdateMirror.load(this)), reconnects = false) { index ->
+                UpdateMirror.save(this, mirrors[index])
+            }
+            card.addView(label(getString(R.string.update_mirror_description), 14, MUTED).apply {
+                setPadding(0, dp(10), 0, 0)
+            })
             toggle(card, getString(R.string.settings_background_update_checks),
                 getString(R.string.settings_background_update_checks_description),
                 UpdateAvailability.backgroundChecksEnabled(this)) { UpdateAvailability.saveBackgroundChecksEnabled(this, it) }
@@ -2713,7 +2722,7 @@ class DiPlayActivity : ComponentActivity(), AppAppearanceOwner {
     }
 
     private fun latestRelease(): UpdateRelease? {
-        return UpdateReleaseLookup.latest(version(), userAgent())
+        return UpdateReleaseLookup.latest(version(), userAgent(), mirror = UpdateMirror.load(this))
     }
 
     private fun openAvailableUpdate(release: UpdateRelease) {
@@ -2742,14 +2751,15 @@ class DiPlayActivity : ComponentActivity(), AppAppearanceOwner {
         render()
         Thread({
             // Each attempt owns its files, including across activity recreation.
+            val mirror = UpdateMirror.load(this)
             val directory = File(cacheDir, "update/${java.util.UUID.randomUUID()}")
             val outcome = runCatching {
                 // The cached release can be a day old. Download the newest one.
                 release = latestRelease() ?: throw IOException(getString(R.string.update_up_to_date))
                 val checksumsFile = File(directory, UpdateCatalog.CHECKSUMS_FILE)
-                UpdateClient.download(release.checksumsUrl, checksumsFile) { _, _ -> }
+                UpdateClient.download(mirror.proxied(release.checksumsUrl), checksumsFile) { _, _ -> }
                 val apkFile = File(directory, release.apkName)
-                UpdateClient.download(release.apkUrl, apkFile) { written, total ->
+                UpdateClient.download(mirror.proxied(release.apkUrl), apkFile) { written, total ->
                     val percent = total?.takeIf { it > 0 }?.let { (written * 100 / it).toInt() } ?: return@download
                     if (percent != updateProgress) {
                         updateProgress = percent

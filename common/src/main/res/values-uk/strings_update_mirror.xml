@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">Джерело оновлень</string>
+    <string name="update_mirror_description">Маршрут перевірки та завантаження оновлень. Дзеркало — сторонній сервіс і може не працювати; APK як і раніше перевіряється за SHA-256.</string>
+</resources>

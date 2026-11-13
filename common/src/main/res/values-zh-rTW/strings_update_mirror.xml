@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_mirror">更新下載源</string>
+    <string name="update_mirror_description">檢查與下載更新所走的線路。鏡像為第三方服務，可能失效；APK 仍會經 SHA-256 驗證。</string>
+</resources>
