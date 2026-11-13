@@ -9,8 +9,10 @@ import java.net.URL
 import java.net.URLConnection
 
 internal object UpdateClient {
+    // The fork updates from its own releases; an upstream DiPlay release would replace the
+    // Feifan F7 support with the stock BYD build, so never fall back to the upstream repo.
     internal const val RELEASES_URL =
-        "https://api.github.com/repos/shihabal3amri/DiPlay/releases?per_page=3"
+        "https://api.github.com/repos/xhg8124-a11y/Diplay-R/releases?per_page=3"
     private const val CONNECT_TIMEOUT_MILLIS = 10_000
     private const val READ_TIMEOUT_MILLIS = 30_000
     // Far above the release APKs (under 20 MB at v0.2.21). It stops a body that never ends.
