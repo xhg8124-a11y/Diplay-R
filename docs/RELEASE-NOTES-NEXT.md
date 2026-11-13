@@ -3,3 +3,12 @@
 Changes through DiPlay 0.2.22 are documented in [0.2.22 release notes](RELEASE-NOTES-0.2.22.md). Measured checks are in [VALIDATION.md](VALIDATION.md). Device acceptance and remaining failure families are tracked in [connection reliability validation](CONNECTION_RELIABILITY.md).
 
 No unreleased changes are recorded yet. Add future unreleased changes here.
+
+## Unreleased
+
+- Added a Feifan F7 preset (Settings → Vehicle, experimental): 325 mm CarPlay physical width for
+  the 15.05" centre screen and passenger-screen discovery for the dashboard map, with automatic
+  Build-based detection and a manual on/off override. See [Feifan F7 support](FEIFAN_F7.md).
+- While a wired wait sees no iPhone, one sysfs probe over the head unit's local ADB now records
+  in the diagnostic report whether the kernel lists the Apple device the framework does not —
+  separating a port or cable problem from a head-unit framework restriction.

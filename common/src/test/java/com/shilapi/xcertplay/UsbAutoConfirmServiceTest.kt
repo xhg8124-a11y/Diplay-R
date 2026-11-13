@@ -63,6 +63,14 @@ class UsbAutoConfirmServiceTest {
         assertFalse(UsbAutoConfirmService.isSystemUsbWindow("evil.app", "android.app.Dialog"))
     }
 
+    @Test fun oemSystemUiPackagesThatKeepTheSystemuiSuffixAreAccepted() {
+        // RISING OS and other Chinese head units rename com.android.systemui.
+        assertTrue(UsbAutoConfirmService.isSystemUsbWindow("com.rising.systemui", "android.app.Dialog"))
+        assertTrue(UsbAutoConfirmService.isSystemUsbWindow("com.saic.systemui", "com.android.systemui.usb.UsbPermissionActivity"))
+        assertFalse(UsbAutoConfirmService.isSystemUsbWindow("com.rising.systemui", "com.android.systemui.media.MediaProjectionPermissionActivity"))
+        assertFalse(UsbAutoConfirmService.isSystemPackage("evil.systemui.app"))
+    }
+
     @Test fun otherSystemDialogsNamingDiPlayAreLeftAlone() {
         assertFalse(UsbAutoConfirmService.isTargetPrompt("Start recording or casting with DiPlay?", "DiPlay"))
         assertFalse(UsbAutoConfirmService.isTargetPrompt(

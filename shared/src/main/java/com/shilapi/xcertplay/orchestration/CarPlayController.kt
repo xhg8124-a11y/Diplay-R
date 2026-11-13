@@ -96,6 +96,7 @@ import com.shilapi.xcertplay.transport.LockdownPairingClient
 import com.shilapi.xcertplay.transport.LockdownPairRecord
 import com.shilapi.xcertplay.transport.NcmFunctionDiscovery
 import com.shilapi.xcertplay.transport.NcmUsbBridge
+import com.shilapi.xcertplay.transport.UsbSysfsProbe
 import java.io.Closeable
 import java.io.IOException
 import java.net.InetAddress
@@ -318,6 +319,7 @@ class CarPlayController(
     private var lastCh341Listing: String? = null
     private var lastIphoneListing: String? = null
     private var iphoneWaitStartedAt: Long? = null
+    private var sysfsProbeStarted = false
     private var vpnLatch = CountDownLatch(1)
     private val teardownComplete = CountDownLatch(1)
 
@@ -1934,6 +1936,7 @@ class CarPlayController(
         phase = Phase.IPHONE
         reenumerationAttempts = 0
         iphoneWaitStartedAt = null
+        sysfsProbeStarted = false
         onStatus(CarPlayStatus.DiscoveringIphone)
         checkIphoneAvailability()
     }
@@ -1969,6 +1972,25 @@ class CarPlayController(
         if (listed == lastIphoneListing) return
         lastIphoneListing = listed
         debugLog("wired iPhone not listed by Android; USB devices=[$listed]")
+        if (sysfsProbeStarted) return
+        // Once per wait, look behind the framework: a kernel that lists the iPhone the framework
+        // hides needs a head-unit fix, while a kernel that sees nothing needs a cable or port change.
+        sysfsProbeStarted = true
+        executor.execute {
+            val finding = UsbSysfsProbe.probe(appContext)
+            connectionDiagnostic(
+                when {
+                    finding == null ->
+                        "USB sysfs probe unavailable (local ADB not approved or busy); framework=[$listed]"
+                    finding.appleListed ->
+                        "USB sysfs probe: kernel lists an Apple device the framework does not; " +
+                            "kernel=[${finding.devices.joinToString(", ")}] framework=[$listed]"
+                    else ->
+                        "USB sysfs probe: kernel lists no Apple device either; " +
+                            "kernel=[${finding.devices.joinToString(", ")}] framework=[$listed]"
+                },
+            )
+        }
     }
 
     private fun requestIphonePermission(device: UsbDevice) {

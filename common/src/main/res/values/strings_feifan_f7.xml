@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Feifan F7 preset (experimental)</string>
+    <string name="settings_feifan_f7_status_detected">Feifan (SAIC) head unit detected</string>
+    <string name="settings_feifan_f7_status_undetected">No Feifan head unit detected. If you drive a Feifan F7, turn the preset on.</string>
+    <string name="settings_feifan_f7_mode">Feifan preset</string>
+    <string name="settings_feifan_f7_mode_auto">Automatic</string>
+    <string name="settings_feifan_f7_mode_on">On</string>
+    <string name="settings_feifan_f7_mode_off">Off</string>
+    <string name="settings_feifan_f7_description">Tunes CarPlay for the Feifan F7: 325 mm physical width for the 15.05-inch centre screen, and passenger-screen discovery for the dashboard map. The width applies at the next connection.</string>
+</resources>

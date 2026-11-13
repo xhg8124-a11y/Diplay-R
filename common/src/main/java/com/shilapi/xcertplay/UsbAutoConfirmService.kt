@@ -35,7 +35,7 @@ class UsbAutoConfirmService : AccessibilityService() {
         if (now - lastClickTime < DEBOUNCE_MILLIS) return
         val root = runCatching { rootInActiveWindow }.getOrNull() ?: return
         try {
-            if (root.windowId != usbWindowId || root.packageName?.toString() !in SYSTEM_PACKAGES) return
+            if (root.windowId != usbWindowId || !isSystemPackage(root.packageName?.toString())) return
             val texts = mutableListOf<String>()
             visit(root) { node ->
                 node.text?.toString()?.let(texts::add)
@@ -92,7 +92,6 @@ class UsbAutoConfirmService : AccessibilityService() {
     companion object {
         private const val TAG = "UsbAutoConfirm"
         private const val DEBOUNCE_MILLIS = 800L
-        private val SYSTEM_PACKAGES = setOf("com.android.systemui", "android")
         private val USB_ACTIVITIES = setOf(
             "com.android.systemui.usb.UsbPermissionActivity",
             "com.android.systemui.usb.UsbConfirmActivity",
@@ -109,7 +108,15 @@ class UsbAutoConfirmService : AccessibilityService() {
         private val USB_DEVICE_WORDS = Regex("USB|iPhone|iPad", RegexOption.IGNORE_CASE)
 
         internal fun isSystemUsbWindow(pkg: String?, className: String?): Boolean =
-            pkg in SYSTEM_PACKAGES && (className in USB_ACTIVITIES || className == ALERT_ACTIVITY_CLASS)
+            isSystemPackage(pkg) && (className in USB_ACTIVITIES || className == ALERT_ACTIVITY_CLASS)
+
+        /**
+         * Chinese head units ship their own system UI package (RISING OS, ECARX and others rename
+         * com.android.systemui); every such package ends with ".systemui". [isTargetPrompt] still
+         * requires the dialog to name this app and a USB device before anything is clicked.
+         */
+        internal fun isSystemPackage(pkg: String?): Boolean =
+            pkg == "android" || pkg == "com.android.systemui" || pkg?.endsWith(".systemui") == true
 
         /**
          * The prompt must name this app and a USB device. Android 10+ words it "Allow DiPlay to

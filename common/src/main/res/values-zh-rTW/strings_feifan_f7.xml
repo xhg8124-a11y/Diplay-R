@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">飛凡F7預設（實驗性）</string>
+    <string name="settings_feifan_f7_status_detected">已偵測到飛凡（上汽）車機</string>
+    <string name="settings_feifan_f7_status_undetected">未偵測到飛凡車機。若您駕駛飛凡F7，請手動開啟預設。</string>
+    <string name="settings_feifan_f7_mode">飛凡預設</string>
+    <string name="settings_feifan_f7_mode_auto">自動</string>
+    <string name="settings_feifan_f7_mode_on">開啟</string>
+    <string name="settings_feifan_f7_mode_off">關閉</string>
+    <string name="settings_feifan_f7_description">為飛凡F7調整 CarPlay：15.05吋中控螢幕以 325 公釐實體寬度呈現，儀表地圖可使用副駕螢幕。實體寬度於下次連線時生效。</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Feifan F7 プリセット（実験的機能）</string>
+    <string name="settings_feifan_f7_status_detected">Feifan（SAIC）ヘッドユニットを検出しました</string>
+    <string name="settings_feifan_f7_status_undetected">Feifan ヘッドユニットは検出されませんでした。Feifan F7 に乗っている場合はプリセットをオンにしてください。</string>
+    <string name="settings_feifan_f7_mode">Feifan プリセット</string>
+    <string name="settings_feifan_f7_mode_auto">自動</string>
+    <string name="settings_feifan_f7_mode_on">オン</string>
+    <string name="settings_feifan_f7_mode_off">オフ</string>
+    <string name="settings_feifan_f7_description">Feifan F7 向けに CarPlay を調整します。15.05インチのセンタースクリーンに 325 mm の物理幅を設定し、ダッシュボードマップで助手席スクリーンを検出できるようにします。物理幅は次回の接続時に適用されます。</string>
+</resources>

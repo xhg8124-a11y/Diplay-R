@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Preset Feifan F7 (sperimentale)</string>
+    <string name="settings_feifan_f7_status_detected">Unità principale Feifan (SAIC) rilevata</string>
+    <string name="settings_feifan_f7_status_undetected">Nessuna unità principale Feifan rilevata. Se guidi una Feifan F7, attiva manualmente il preset.</string>
+    <string name="settings_feifan_f7_mode">Preset Feifan</string>
+    <string name="settings_feifan_f7_mode_auto">Automatico</string>
+    <string name="settings_feifan_f7_mode_on">Attivo</string>
+    <string name="settings_feifan_f7_mode_off">Disattivato</string>
+    <string name="settings_feifan_f7_description">Adatta CarPlay alla Feifan F7: larghezza fisica di 325 mm per lo schermo centrale da 15,05 pollici e individuazione dello schermo passeggero per la mappa sul cruscotto. La larghezza si applica alla prossima connessione.</string>
+</resources>

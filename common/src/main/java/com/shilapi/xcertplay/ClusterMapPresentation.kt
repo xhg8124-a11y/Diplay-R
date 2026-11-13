@@ -30,6 +30,7 @@ import android.widget.ProgressBar
 import com.shilapi.xcertplay.airplay.CarPlayClusterDisplay
 import com.shilapi.xcertplay.host.R
 import com.shilapi.xcertplay.hud.ClusterTurnGuidance
+import com.shilapi.xcertplay.network.FeifanHeadUnit
 
 /**
  * Shows CarPlay's instrument-cluster stream on a BYD cluster projection display.
@@ -247,6 +248,12 @@ internal class ClusterMapPresentation(
          */
         const val PROJECTION_TICK_MILLIS = 2_000L
 
+        /**
+         * Smallest display the Feifan fallback accepts: anything narrower is not one of the car's
+         * screens (the F7 passenger screen is 1920x1080), but a mirror or debug surface.
+         */
+        const val MIN_FEIFAN_DISPLAY_WIDTH = 1280
+
         /** Keep the 5/5.1 selection order, then try the measured DiLink 4 projection display. */
         fun findDisplay(context: Context, theme: DiLink51ClusterLayout.Theme = DiLink51ClusterLayout.theme(context)): Display? {
             val displays = context.getSystemService(DisplayManager::class.java)
@@ -263,10 +270,14 @@ internal class ClusterMapPresentation(
                         GeelyClusterDisplay.matches(display, size.x, size.y)
                     }
                 }
-                return displays.firstOrNull { display ->
+                val measured = displays.firstOrNull { display ->
                     val size = sizeOf(display)
                     DiLink4ClusterDisplay.accepts(display.name, size.x, size.y)
                 }
+                if (measured != null || !FeifanHeadUnit.active(context)) return measured
+                // No measured Feifan display names yet. With the preset on, accept any car-sized
+                // presentation display: on the F7 that is the 12.3" 1920x1080 passenger screen.
+                return displays.firstOrNull { display -> sizeOf(display).x >= MIN_FEIFAN_DISPLAY_WIDTH }
             }
             return displays.firstOrNull { it.name == name }?.takeIf {
                 if (!DiLink51ClusterLayout.supported()) true else {

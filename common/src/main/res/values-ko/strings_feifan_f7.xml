@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Feifan F7 사전 설정(실험 기능)</string>
+    <string name="settings_feifan_f7_status_detected">Feifan(SAIC) 헤드유닛이 감지되었습니다</string>
+    <string name="settings_feifan_f7_status_undetected">Feifan 헤드유닛이 감지되지 않았습니다. Feifan F7을 운전 중이라면 사전 설정을 직접 켜세요.</string>
+    <string name="settings_feifan_f7_mode">Feifan 사전 설정</string>
+    <string name="settings_feifan_f7_mode_auto">자동</string>
+    <string name="settings_feifan_f7_mode_on">켜기</string>
+    <string name="settings_feifan_f7_mode_off">끄기</string>
+    <string name="settings_feifan_f7_description">Feifan F7에 맞게 CarPlay를 조정합니다. 15.05인치 중앙 화면에 325mm 물리 폭을 적용하고 대시보드 지도에 조수석 화면을 사용할 수 있게 합니다. 물리 폭은 다음 연결 때 적용됩니다.</string>
+</resources>

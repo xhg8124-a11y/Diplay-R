@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">إعداد Feifan F7 المسبق (تجريبي)</string>
+    <string name="settings_feifan_f7_status_detected">تم اكتشاف وحدة رأس Feifan (SAIC)</string>
+    <string name="settings_feifan_f7_status_undetected">لم يتم اكتشاف وحدة رأس Feifan. إذا كنت تقود Feifan F7، فقم بتشغيل الإعداد المسبق يدويًا.</string>
+    <string name="settings_feifan_f7_mode">الإعداد المسبق لـ Feifan</string>
+    <string name="settings_feifan_f7_mode_auto">تلقائي</string>
+    <string name="settings_feifan_f7_mode_on">تشغيل</string>
+    <string name="settings_feifan_f7_mode_off">إيقاف</string>
+    <string name="settings_feifan_f7_description">يضبط CarPlay لجهاز Feifan F7: عرض فعلي 325 مم لشاشة المركز مقاس 15.05 بوصة، واكتشاف شاشة الراكب لخريطة لوحة العدادات. يُطبَّق العرض عند الاتصال التالي.</string>
+</resources>

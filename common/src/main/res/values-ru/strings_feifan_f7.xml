@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Профиль Feifan F7 (экспериментально)</string>
+    <string name="settings_feifan_f7_status_detected">Обнаружена головная система Feifan (SAIC)</string>
+    <string name="settings_feifan_f7_status_undetected">Головная система Feifan не обнаружена. Если вы управляете Feifan F7, включите профиль вручную.</string>
+    <string name="settings_feifan_f7_mode">Профиль Feifan</string>
+    <string name="settings_feifan_f7_mode_auto">Автоматически</string>
+    <string name="settings_feifan_f7_mode_on">Вкл.</string>
+    <string name="settings_feifan_f7_mode_off">Выкл.</string>
+    <string name="settings_feifan_f7_description">Настраивает CarPlay под Feifan F7: физическая ширина 325 мм для 15,05-дюймового центрального экрана и обнаружение экрана пассажира для карты на приборной панели. Ширина применяется при следующем подключении.</string>
+</resources>

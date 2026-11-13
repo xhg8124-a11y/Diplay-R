@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Ajuste predefinido de Feifan F7 (experimental)</string>
+    <string name="settings_feifan_f7_status_detected">Se ha detectado una unidad principal Feifan (SAIC)</string>
+    <string name="settings_feifan_f7_status_undetected">No se ha detectado ninguna unidad principal Feifan. Si conduces un Feifan F7, activa el ajuste manualmente.</string>
+    <string name="settings_feifan_f7_mode">Ajuste predefinido de Feifan</string>
+    <string name="settings_feifan_f7_mode_auto">Automático</string>
+    <string name="settings_feifan_f7_mode_on">Activado</string>
+    <string name="settings_feifan_f7_mode_off">Desactivado</string>
+    <string name="settings_feifan_f7_description">Ajusta CarPlay para el Feifan F7: ancho físico de 325 mm para la pantalla central de 15,05 pulgadas y detección de la pantalla del acompañante para el mapa del cuadro. El ancho se aplica en la próxima conexión.</string>
+</resources>

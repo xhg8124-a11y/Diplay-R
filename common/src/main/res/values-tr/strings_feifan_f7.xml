@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_feifan_f7">Feifan F7 ön ayarı (deneysel)</string>
+    <string name="settings_feifan_f7_status_detected">Feifan (SAIC) head unit algılandı</string>
+    <string name="settings_feifan_f7_status_undetected">Feifan head unit algılanmadı. Feifan F7 kullanıyorsanız ön ayarı elle açın.</string>
+    <string name="settings_feifan_f7_mode">Feifan ön ayarı</string>
+    <string name="settings_feifan_f7_mode_auto">Otomatik</string>
+    <string name="settings_feifan_f7_mode_on">Açık</string>
+    <string name="settings_feifan_f7_mode_off">Kapalı</string>
+    <string name="settings_feifan_f7_description">CarPlay\'i Feifan F7 için ayarlar: 15,05 inç orta ekran için 325 mm fiziksel genişlik ve gösterge paneli haritası için yolcu ekranı keşfi. Genişlik bir sonraki bağlantıda uygulanır.</string>
+</resources>

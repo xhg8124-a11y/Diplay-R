@@ -17,6 +17,7 @@ import com.shilapi.xcertplay.orchestration.ManualHotspotBand
 import com.shilapi.xcertplay.orchestration.ManualHotspotSecurity
 import com.shilapi.xcertplay.orchestration.MfiTarget
 import com.shilapi.xcertplay.orchestration.WirelessHotspotMode
+import com.shilapi.xcertplay.network.FeifanHeadUnit
 import com.shilapi.xcertplay.network.WifiP2pChannels
 import com.shilapi.xcertplay.transport.LockdownPairRecord
 import java.io.File
@@ -822,7 +823,12 @@ object AirPlayPersistence {
         AirPlayDisplaySettings.sanitizeWidthPhysicalMm(
             context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getInt(
                 KEY_WIDTH_PHYSICAL_MM,
-                com.shilapi.xcertplay.airplay.CarPlaySize.DEFAULT.widthMillimeters,
+                // The Feifan F7's 15.05" screen needs 325 mm for CarPlay controls at the right density.
+                if (FeifanHeadUnit.active(context)) {
+                    FeifanHeadUnit.F7_WIDTH_PHYSICAL_MM
+                } else {
+                    com.shilapi.xcertplay.airplay.CarPlaySize.DEFAULT.widthMillimeters
+                },
             ),
         )
 

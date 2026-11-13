@@ -79,6 +79,7 @@ import com.shilapi.xcertplay.network.CarHotspotConfigWrite
 import com.shilapi.xcertplay.network.CarHotspotSavedCredentials
 import com.shilapi.xcertplay.network.CarHotspotSettings
 import com.shilapi.xcertplay.network.CarHotspotTethering
+import com.shilapi.xcertplay.network.FeifanHeadUnit
 import com.shilapi.xcertplay.network.HotspotCredentials
 import com.shilapi.xcertplay.network.WifiP2pChannels
 import com.shilapi.xcertplay.orchestration.ManualHotspotProvisioning
@@ -132,6 +133,7 @@ internal enum class SettingsSection {
     BYD_NAVIGATION,
     PERMISSIONS_AND_HELP,
     LANGUAGE,
+    FEIFAN_PRESET,
 }
 
 internal object SettingsInformationArchitecture {
@@ -153,6 +155,7 @@ internal object SettingsInformationArchitecture {
             SettingsSection.CARPLAY_CONTROLS,
             SettingsSection.WHEEL_KEYS,
             SettingsSection.CAR_BUTTON,
+            SettingsSection.FEIFAN_PRESET,
         ),
         SettingsCategory.DIAGNOSTICS to setOf(SettingsSection.DIAGNOSTICS),
         SettingsCategory.ADVANCED to setOf(
@@ -1738,6 +1741,25 @@ class DiPlayActivity : ComponentActivity(), AppAppearanceOwner {
         }
         filteredSection(content, SettingsSection.WHEEL_KEYS,
             getString(R.string.settings_wheel_keys), R.drawable.ic_dp_controls, ::wheelKeysSettings)
+        filteredSection(content, SettingsSection.FEIFAN_PRESET,
+            getString(R.string.settings_feifan_f7), R.drawable.ic_dp_car) { card ->
+            card.addView(label(getString(
+                if (FeifanHeadUnit.detected) R.string.settings_feifan_f7_status_detected
+                else R.string.settings_feifan_f7_status_undetected), 14, MUTED))
+            val modes = FeifanHeadUnit.Preset.entries
+            val modeNames = listOf(
+                getString(R.string.settings_feifan_f7_mode_auto),
+                getString(R.string.settings_feifan_f7_mode_on),
+                getString(R.string.settings_feifan_f7_mode_off),
+            )
+            choice(card, getString(R.string.settings_feifan_f7_mode), modeNames,
+                modes.indexOf(FeifanHeadUnit.preset(this))) { index ->
+                FeifanHeadUnit.savePreset(this, modes[index])
+            }
+            card.addView(label(getString(R.string.settings_feifan_f7_description), 14, MUTED).apply {
+                setPadding(0, dp(10), 0, 0)
+            })
+        }
         filteredSection(content, SettingsSection.CONNECTION_SETUP,
             getString(R.string.connection_setup), R.drawable.ic_dp_connection) { card ->
             card.addView(label(getString(R.string.choose_how_to_connect_follow_the_setup_steps_and_save_your), 16, MUTED))
