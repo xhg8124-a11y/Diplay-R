@@ -18,3 +18,6 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 - About page offers an update source choice: direct GitHub or the gh-proxy.com mirror for
   mainland-China drivers. Checks and downloads follow the chosen route; the catalog still
   validates the GitHub URLs and the APK keeps its SHA-256 verification.
+- Update check through a mirror now falls back to direct GitHub when the mirror's shared
+  GitHub API quota is exhausted (intermittent 403 "API rate limit exceeded" observed on
+  gh-proxy.com). Downloads keep the chosen mirror; its object proxy path is unaffected.
