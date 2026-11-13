@@ -1,4 +1,6 @@
-# DiPlay
+# DiPlay（上游原版指南）
+
+> 本文件保留上游 DiPlay 的原始指南内容。**Diplay-R（飞凡F7优化版）的安装、预设与 USB 排查请看 [README.md](README.md) 与 [飞凡F7适配指南](docs/FEIFAN_F7.md)。**
 
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md)
 
