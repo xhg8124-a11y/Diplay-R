@@ -12,3 +12,6 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 - While a wired wait sees no iPhone, one sysfs probe over the head unit's local ADB now records
   in the diagnostic report whether the kernel lists the Apple device the framework does not —
   separating a port or cable problem from a head-unit framework restriction.
+- The in-app updater now tracks this repository's releases instead of upstream DiPlay, so an
+  upstream release can no longer replace the Feifan F7 support. First release: v0.2.23-r1
+  (versionCode 42), signed with the fork's own key.

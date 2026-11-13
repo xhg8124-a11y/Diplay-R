@@ -26,7 +26,7 @@
 
 ## 安装（飞凡F7 / RISING OS）
 
-1. **获取 APK**：从本仓库 [Actions](https://github.com/xhg8124-a11y/Diplay-R/actions) 下载构建产物，或[从源码构建](#从源码构建)
+1. **获取 APK**：从 [Releases](https://github.com/xhg8124-a11y/Diplay-R/releases/latest) 下载（应用内也支持自动更新提示）；测试构建可在 [Actions](https://github.com/xhg8124-a11y/Diplay-R/actions) 获取。**如装有上游 DiPlay**：两者签名不同，请先卸载原版再安装；此后 Diplay-R 各版本间可直接覆盖更新
 2. **开启车机热点**（设置 → 热点）
 3. 手机连接车机热点，用 ADB 助手（如甲壳虫 ADB 助手）连接 `192.168.43.1:5555`，安装 APK——这是飞凡社区已验证的通用做法
 4. 打开 DiPlay → 完成连接设置 → **设置 → 车辆 → 飞凡F7预设 → 开**（自动检测未命中时手动开启）
