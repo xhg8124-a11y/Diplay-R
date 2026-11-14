@@ -1083,6 +1083,10 @@ open class CarPlayHostActivity : ComponentActivity() {
             maybeStartCarPlay()
         } else {
             setStatus(R.string.vpn_consent_was_denied)
+            // A firmware whose dialog answers "denied" on its own (observed on RISING OS: the
+            // consent returns within ~2 s without a tap) leaves the driver no retry path. The
+            // car's own ADB can allow the app op instead, exactly as when the dialog is missing.
+            if (!vpnAdbConsentTried) preConsentVpnOverAdb()
         }
     }
 

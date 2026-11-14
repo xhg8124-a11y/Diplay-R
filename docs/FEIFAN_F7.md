@@ -91,10 +91,11 @@ ADB extras in Settings instead.
   passenger screen still needs eyes on the car.
 - **The one blocker in that report: "VPN 授权被拒绝"**. Wired CarPlay bridges the iPhone's USB
   network through an Android VPN service; Android asks for consent once with a system dialog.
-  The dialog was declined, so the session stopped before video. Replug and approve
-  （确定/信任） when the VPN connection request appears. If the firmware swallows the dialog,
-  pre-consent over the car's ADB:
-  `adb shell appops set com.shihab.diplay ACTIVATE_VPN allow`.
+  On the F7 the consent activity opens and answers "denied" within ~2 s — twice in a row,
+  faster than a tap — so RISING OS appears to auto-deny it. Since 0.2.27-r1 a denied dialog
+  also runs the ADB allowance and shows the command on the CarPlay screen; run it once from a
+  phone connected to the car hotspot (`adb connect 192.168.43.1:5555`):
+  `adb shell appops set com.shihab.diplay ACTIVATE_VPN allow`, then replug the iPhone.
 
 ## What is still unknown
 

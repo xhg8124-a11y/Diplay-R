@@ -143,6 +143,21 @@ class CarPlayVpnConsentTest {
             ReflectionHelpers.ClassParameter.from(Int::class.javaPrimitiveType, Activity.RESULT_CANCELED))
         assertFalse(field("vpnReady"))
         assertFalse(field("awaitingVpnConsent"))
+        awaitAdbConsent()
+        shadowOf(Looper.getMainLooper()).idle()
+    }
+
+    @Test fun aDeniedDialogAlsoSeeksTheAdbAllowance() {
+        // RISING OS opens its consent activity and answers "denied" without a tap: the driver
+        // needs the same ADB command step as firmware without a dialog at all.
+        VpnPreConsentTestShadow.access = LocalAdb.Access.UNREACHABLE
+        VpnPreConsentTestShadow.allowsVpn = false
+        invoke("requestVpnConsent")
+        ReflectionHelpers.callInstanceMethod<Unit>(activity, "onVpnConsentResult",
+            ReflectionHelpers.ClassParameter.from(Int::class.javaPrimitiveType, Activity.RESULT_CANCELED))
+        awaitAdbConsent()
+        shadowOf(Looper.getMainLooper()).idle()
+        assertAdbStep(R.string.vpn_authorization_adb_unusable)
     }
 
     @Test fun withoutAConsentScreenOrNetworkAdbTheScreenGivesTheAdbCommand() {

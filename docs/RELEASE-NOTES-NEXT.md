@@ -21,3 +21,7 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 - Update check through a mirror now falls back to direct GitHub when the mirror's shared
   GitHub API quota is exhausted (intermittent 403 "API rate limit exceeded" observed on
   gh-proxy.com). Downloads keep the chosen mirror; its object proxy path is unaffected.
+- A VPN consent dialog that answers "denied" on its own (measured twice on the Feifan F7's
+  RISING OS, ~2 s without a tap) now also runs the ADB allowance and shows the
+  `appops set … ACTIVATE_VPN allow` command on the CarPlay screen, instead of stopping at
+  "VPN consent was denied".
