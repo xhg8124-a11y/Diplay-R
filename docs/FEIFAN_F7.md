@@ -75,7 +75,7 @@ DiPlay also records one evidence line per wired wait into the diagnostic report
 The wired wait never triggers an ADB approval prompt by itself; approve the key from the
 ADB extras in Settings instead.
 
-## Measured on a real F7 (2026-11-14, 0.2.25-r1)
+## Measured on a real F7 (2026-11-14, 0.2.25–0.2.27-r1)
 
 - **Auto-detection hits**: Build fingerprint `risingauto/ep35/ep35:9/PQ3B.190801.002/...` contains
   `risingauto`, so the preset turned itself on and applied the 325 mm width (report shows
@@ -93,6 +93,16 @@ ADB extras in Settings instead.
   with `netstat` including loopback), so DiPlay's own local-ADB extras (USB-permission grant,
   accessibility enable, VPN pre-consent, boot start) work without extra setup once DiPlay's ADB
   key is approved, and phone-side install reaches `192.168.43.1:5555` on the car hotspot.
+- **Wireless CarPlay fully works** (0.2.27-r1 session, iPhone 14 Pro / iOS 27.2): main screen
+  22–26 fps with hardware decode p50=51 ms, media (AAC) with zero underruns, navigation prompts
+  (Opus) audible, and the **dashboard map running at the same time** (1600x600 on a 1920x720
+  presentation display, 17–29 fps). The car also keeps its own cellular internet (vlan8).
+- **Wired is blocked by firmware VPN consent**: the dialog opens and auto-denies within ~2 s,
+  and unlike the Geely E8 case, `appops set … ACTIVATE_VPN allow` does not satisfy
+  `VpnService.prepare()` on this Android 9 build — DiPlay's own ADB allowance runs (`access=
+  READY`, key approved) but reports `granted=false`. An `always_on_vpn_app` secure setting is
+  being tested as the remaining route; remove it with
+  `settings delete secure always_on_vpn_app` if it misbehaves.
 - **The one blocker in that report: "VPN 授权被拒绝"**. Wired CarPlay bridges the iPhone's USB
   network through an Android VPN service; Android asks for consent once with a system dialog.
   On the F7 the consent activity opens and answers "denied" within ~2 s — twice in a row,
