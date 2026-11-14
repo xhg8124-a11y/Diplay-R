@@ -133,13 +133,24 @@ object BydOutputSettings {
      * Hold a Telecom call during CarPlay calls so the car's own phone audio state, and its echo canceller,
      * handle the call. Replaces DiPlay's own canceller for those calls; applies at the next call.
      */
-    fun phoneAudioRoute(context: Context): Boolean = prefs(context).getBoolean(KEY_PHONE_AUDIO_ROUTE, false)
+    fun phoneAudioRoute(context: Context): Boolean {
+        // On for the Feifan F7: holding the Telecom call switches the car to its phone audio
+        // state, the one configuration whose microphone behaviour differs there. A saved choice wins.
+        val p = prefs(context)
+        if (!p.contains(KEY_PHONE_AUDIO_ROUTE) && com.shilapi.xcertplay.network.FeifanHeadUnit.active(context)) return true
+        return p.getBoolean(KEY_PHONE_AUDIO_ROUTE, false)
+    }
 
     fun setPhoneAudioRoute(context: Context, enabled: Boolean) =
         prefs(context).edit().putBoolean(KEY_PHONE_AUDIO_ROUTE, enabled).apply()
 
     /** The same for voice-over-IP calls in other apps; only calls that record from VOICE_COMMUNICATION qualify. */
-    fun phoneAudioRouteApps(context: Context): Boolean = prefs(context).getBoolean(KEY_PHONE_AUDIO_ROUTE_APPS, false)
+    fun phoneAudioRouteApps(context: Context): Boolean {
+        // Same Feifan default as the CarPlay-call route above; a saved choice wins.
+        val p = prefs(context)
+        if (!p.contains(KEY_PHONE_AUDIO_ROUTE_APPS) && com.shilapi.xcertplay.network.FeifanHeadUnit.active(context)) return true
+        return p.getBoolean(KEY_PHONE_AUDIO_ROUTE_APPS, false)
+    }
 
     fun setPhoneAudioRouteApps(context: Context, enabled: Boolean) =
         prefs(context).edit().putBoolean(KEY_PHONE_AUDIO_ROUTE_APPS, enabled).apply()

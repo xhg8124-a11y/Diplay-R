@@ -6,6 +6,10 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 
 ## Unreleased
 
+- Under the Feifan preset the call-audio options in Advanced now default on: Car phone
+  audio for CarPlay calls and for VoIP apps (the one configuration whose microphone
+  behaviour differs on the F7), plus call echo cancellation and the call voice filter.
+  Saved choices win and other head units stay opt-in.
 - An unreadable rotated capture source now moves to the next candidate instead of ending
   capture for the rest of the call: on the Feifan F7, plain MIC fails every read with
   ERROR_INVALID_OPERATION in call mode, which previously stranded the microphone after

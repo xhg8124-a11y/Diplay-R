@@ -129,6 +129,10 @@ Measured on a call (0.2.33-r1): the whole uplink chain was healthy - permission,
 zero. A system service (`com.saic.service.batterychange`) holds the microphone permanently
 with VOICE_RECOGNITION and MIC captures, and RISING OS fed the app's VOICE_COMMUNICATION
 capture zeros beside it. Since 0.2.35-r1 a source that delivers only zeros for 3 s is
+Since 0.2.37-r1 the call-audio options under Advanced default on with the preset
+(Advanced: Car phone audio for CarPlay calls, for VoIP apps, call echo cancellation, call
+voice filter) — the phone audio state is the one configuration whose microphone behaviour
+differs on this firmware. Silent sources are still
 rotated (VOICE_COMMUNICATION → MIC → VOICE_RECOGNITION); a source whose reads fail
 outright (plain MIC returns ERROR_INVALID_OPERATION in call mode on this firmware) is
 skipped the same way. The diagnostic report names the source that finally carries sound.

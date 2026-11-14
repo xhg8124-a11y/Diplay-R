@@ -20,6 +20,7 @@ class FeifanPresetTest {
         context = RuntimeEnvironment.getApplication()
         context.getSharedPreferences("diplay", Context.MODE_PRIVATE).edit().clear().commit()
         context.getSharedPreferences("xcertplay_airplay", Context.MODE_PRIVATE).edit().clear().commit()
+        context.getSharedPreferences("diplay_byd_outputs", Context.MODE_PRIVATE).edit().clear().commit()
     }
 
     @Test fun thePresetSizesTheCentreScreenAtItsRealWidth() {
@@ -61,6 +62,28 @@ class FeifanPresetTest {
         assertEquals("飞凡", AirPlayPersistence.loadOemLabel(context))
         AirPlayPersistence.saveOemLabel(context, "我的F7")
         assertEquals("我的F7", AirPlayPersistence.loadOemLabel(context))
+    }
+
+    @Test fun thePresetTurnsOnTheCallAudioOptions() {
+        // Field-tested on the F7: the car phone audio route is the one configuration whose
+        // microphone behaviour differs, with the voice filter beside it.
+        assertEquals(false, AirPlayPersistence.loadCallEchoCancellation(context))
+        assertEquals(false, AirPlayPersistence.loadCallVoiceFilter(context))
+        assertEquals(false, com.shilapi.xcertplay.hud.BydOutputSettings.phoneAudioRoute(context))
+        assertEquals(false, com.shilapi.xcertplay.hud.BydOutputSettings.phoneAudioRouteApps(context))
+        FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
+        assertEquals(true, AirPlayPersistence.loadCallEchoCancellation(context))
+        assertEquals(true, AirPlayPersistence.loadCallVoiceFilter(context))
+        assertEquals(true, com.shilapi.xcertplay.hud.BydOutputSettings.phoneAudioRoute(context))
+        assertEquals(true, com.shilapi.xcertplay.hud.BydOutputSettings.phoneAudioRouteApps(context))
+    }
+
+    @Test fun aDriverChosenCallAudioChoiceWins() {
+        FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
+        AirPlayPersistence.saveCallEchoCancellation(context, false)
+        com.shilapi.xcertplay.hud.BydOutputSettings.setPhoneAudioRoute(context, false)
+        assertEquals(false, AirPlayPersistence.loadCallEchoCancellation(context))
+        assertEquals(false, com.shilapi.xcertplay.hud.BydOutputSettings.phoneAudioRoute(context))
     }
 
     @Test fun thePresetSwapsTheCarButtonIconForTheFeifanMark() {
