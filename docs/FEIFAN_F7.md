@@ -89,6 +89,10 @@ ADB extras in Settings instead.
 - **Two presentation displays, both 1920x720** (`1:HDMI`, `2:HDMI`), plus a 1280x720 virtual —
   the dashboard map has real surfaces to target. Which is the instrument strip and which is the
   passenger screen still needs eyes on the car.
+- **The F7's adbd listens on TCP 5555 persistently** (`persist.adb.tcp.port=5555`, confirmed
+  with `netstat` including loopback), so DiPlay's own local-ADB extras (USB-permission grant,
+  accessibility enable, VPN pre-consent, boot start) work without extra setup once DiPlay's ADB
+  key is approved, and phone-side install reaches `192.168.43.1:5555` on the car hotspot.
 - **The one blocker in that report: "VPN 授权被拒绝"**. Wired CarPlay bridges the iPhone's USB
   network through an Android VPN service; Android asks for consent once with a system dialog.
   On the F7 the consent activity opens and answers "denied" within ~2 s — twice in a row,
