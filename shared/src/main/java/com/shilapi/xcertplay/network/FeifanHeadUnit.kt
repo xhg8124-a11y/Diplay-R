@@ -37,7 +37,10 @@ object FeifanHeadUnit {
     fun matchesIdentifiers(identifiers: List<String>): Boolean {
         val ids = identifiers.map { it.lowercase() }
         fun has(needle: String) = ids.any { it.contains(needle) }
-        return has("feifan") || has("risingauto") || (has("saic") && has("rising"))
+        // Measured on an F7: fingerprint risingauto/ep35/ep35:9/..., product/device ep35,
+        // Android 9. The exact product match survives a rebranding that drops "risingauto".
+        return has("feifan") || has("risingauto") || ids.any { it == "ep35" } ||
+            (has("saic") && has("rising"))
     }
 
     /** Best-effort Build-based detection; a phone ROM named RisingOS alone does not match. */

@@ -25,6 +25,13 @@ class FeifanHeadUnitTest {
         assertTrue(FeifanHeadUnit.matchesIdentifiers(listOf("saic", "rising_os", "f7")))
     }
 
+    @Test fun matchesTheMeasuredEp35HeadUnit() {
+        // Reported by an F7: fingerprint risingauto/ep35/ep35:9/PQ3B.190801.002.
+        assertTrue(FeifanHeadUnit.matchesIdentifiers(listOf("ep35", "ep35", "qti_ep35")))
+        // Only the exact product code counts; "ep35x" boards of other brands must not match.
+        assertFalse(FeifanHeadUnit.matchesIdentifiers(listOf("ep35x", "other")))
+    }
+
     @Test fun matchesTheFeifanBrandAlone() {
         assertTrue(FeifanHeadUnit.matchesIdentifiers(listOf("feifan", "f7", "saic")))
     }

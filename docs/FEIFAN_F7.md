@@ -75,18 +75,37 @@ DiPlay also records one evidence line per wired wait into the diagnostic report
 The wired wait never triggers an ADB approval prompt by itself; approve the key from the
 ADB extras in Settings instead.
 
+## Measured on a real F7 (2026-11-14, 0.2.25-r1)
+
+- **Auto-detection hits**: Build fingerprint `risingauto/ep35/ep35:9/PQ3B.190801.002/...` contains
+  `risingauto`, so the preset turned itself on and applied the 325 mm width (report shows
+  "CarPlay size: Custom, 325 mm"). The exact product code `ep35` is also matched, so detection
+  survives a rebranding.
+- **Android 9 / API 28**, board `msmnile`, head unit `QTI ep35`. Android 7.1–9 features apply:
+  the USB-permission ADB grant fallback and the Wi-Fi Direct legacy path.
+- **Wired USB works**: "USB charging offer: normal (2400 mA)" is negotiated inside the wired
+  iAP2 session — the iPhone enumerates, permission is granted and iAP2 handshakes.
+- **Main screen: 2560x1600** (reported by the app), matching the preset's assumption.
+- **Two presentation displays, both 1920x720** (`1:HDMI`, `2:HDMI`), plus a 1280x720 virtual —
+  the dashboard map has real surfaces to target. Which is the instrument strip and which is the
+  passenger screen still needs eyes on the car.
+- **The one blocker in that report: "VPN 授权被拒绝"**. Wired CarPlay bridges the iPhone's USB
+  network through an Android VPN service; Android asks for consent once with a system dialog.
+  The dialog was declined, so the session stopped before video. Replug and approve
+  （确定/信任） when the VPN connection request appears. If the firmware swallows the dialog,
+  pre-consent over the car's ADB:
+  `adb shell appops set com.shihab.diplay ACTIVATE_VPN allow`.
+
 ## What is still unknown
 
 These need reports from real cars before they can be turned on by default. Export a diagnostic
 report (Settings → Diagnostics) after trying the feature and share it:
 
-- The real Build identifiers (`ro.product.*`) of the F7 head unit — improves auto-detection.
-- Whether the passenger screen shows up as a presentation display for `DISPLAY_CATEGORY_PRESENTATION`.
 - Steering-wheel key codes (if keys do not reach the learn dialog, RISING OS routes them through
   a private input service like Geely does, and a small integration is needed).
-- The USB permission dialog's package/activity on RISING OS — the auto-confirm service currently
-  matches `com.android.systemui` / `android` dialogs with 确定/允许/OK/Allow buttons.
 - Whether navigation prompts have a dedicated audio channel on the F7.
+- Which of the two 1920x720 presentation displays is which screen, and whether the cluster map
+  lands on the intended one.
 
 ## 中文说明
 
