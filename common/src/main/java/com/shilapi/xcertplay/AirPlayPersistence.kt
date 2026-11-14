@@ -248,9 +248,14 @@ object AirPlayPersistence {
             .apply()
     }
 
-    fun loadAudioFocusEnabled(context: Context): Boolean =
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getBoolean(KEY_AUDIO_FOCUS_ENABLED, false)
+    fun loadAudioFocusEnabled(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        // On the Feifan F7 the volume knob follows the audio-focus holder: with focus on,
+        // navigation prompts claim it while speaking and calls duck the music (field-tested).
+        // Upstream keeps focus off because some head units handle it badly; a saved choice wins.
+        if (!prefs.contains(KEY_AUDIO_FOCUS_ENABLED) && FeifanHeadUnit.active(context)) return true
+        return prefs.getBoolean(KEY_AUDIO_FOCUS_ENABLED, false)
+    }
 
     fun saveAudioFocusEnabled(context: Context, enabled: Boolean) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
@@ -268,10 +273,16 @@ object AirPlayPersistence {
             .apply()
     }
 
-    /** Opt-in (#946, #545): each navigation prompt requests duckable focus. Applies only while audio focus is on. */
-    fun loadNavigationPromptAudioFocus(context: Context): Boolean =
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getBoolean(KEY_NAVIGATION_PROMPT_AUDIO_FOCUS, false)
+    /**
+     * Each navigation prompt requests duckable focus. Applies only while audio focus is on.
+     * Default on under the Feifan preset: the F7's volume knob then adjusts prompts while they
+     * speak (field-tested); upstream keeps it opt-in and a saved driver choice always wins.
+     */
+    fun loadNavigationPromptAudioFocus(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (!prefs.contains(KEY_NAVIGATION_PROMPT_AUDIO_FOCUS) && FeifanHeadUnit.active(context)) return true
+        return prefs.getBoolean(KEY_NAVIGATION_PROMPT_AUDIO_FOCUS, false)
+    }
 
     fun saveNavigationPromptAudioFocus(context: Context, enabled: Boolean) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()

@@ -6,6 +6,10 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 
 ## Unreleased
 
+- Under the Feifan preset the audio-focus toggles now default on (Advanced: audio focus,
+  navigation prompts request focus; auto-yield was already on). Field-tested on the F7:
+  the volume knob follows the focus holder, so a speaking prompt gets the knob and calls
+  duck the music. Saved choices win and other head units stay opt-in.
 - Added a Feifan F7 preset (Settings → Vehicle, experimental): 325 mm CarPlay physical width for
   the 15.05" centre screen and passenger-screen discovery for the dashboard map, with automatic
   Build-based detection and a manual on/off override. See [Feifan F7 support](FEIFAN_F7.md).

@@ -134,6 +134,13 @@ navigation group through BUS05. That means the car's own volume UI adjusts navig
 music independently - keep the DiPlay navigation channel on 0; picking one of the legacy
 streams in the 1–20 grid bypasses the zones and merges prompts into the media volume.
 
+The F7's volume knob follows the audio-focus holder, so under the Feifan preset (since
+0.2.32-r1) three Advanced toggles default on: **Audio focus**, **Mute media on temporary
+focus loss** (already the stock default) and **Navigation prompts request audio focus**.
+With them, a speaking prompt holds the focus — the knob then adjusts the navigation
+volume while it speaks — and calls or car sounds duck the music. A saved driver choice
+always wins, and on other head units the toggles stay opt-in as upstream intended.
+
 ## What is still unknown
 
 These need reports from real cars before they can be turned on by default. Export a diagnostic

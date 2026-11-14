@@ -55,6 +55,28 @@ class FeifanPresetTest {
         assertEquals(500, AirPlayPersistence.loadMediaBufferMillis(context, wireless = true))
     }
 
+    @Test fun thePresetTurnsOnTheAudioFocusPair() {
+        // Field-tested on the F7: with focus on, prompts claim it while speaking and the
+        // volume knob follows them; calls duck the music through auto-yield (default on).
+        FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
+        assertEquals(true, AirPlayPersistence.loadAudioFocusEnabled(context))
+        assertEquals(true, AirPlayPersistence.loadNavigationPromptAudioFocus(context))
+        assertEquals(true, AirPlayPersistence.loadAudioFocusAutoYield(context))
+    }
+
+    @Test fun aDriverChosenFocusChoiceBeatsThePresetDefaults() {
+        FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
+        AirPlayPersistence.saveAudioFocusEnabled(context, false)
+        AirPlayPersistence.saveNavigationPromptAudioFocus(context, false)
+        assertEquals(false, AirPlayPersistence.loadAudioFocusEnabled(context))
+        assertEquals(false, AirPlayPersistence.loadNavigationPromptAudioFocus(context))
+    }
+
+    @Test fun withoutThePresetTheFocusTogglesStayOptIn() {
+        assertEquals(false, AirPlayPersistence.loadAudioFocusEnabled(context))
+        assertEquals(false, AirPlayPersistence.loadNavigationPromptAudioFocus(context))
+    }
+
     @Test fun withoutThePresetTheStockWirelessBufferStays() {
         assertEquals(300, AirPlayPersistence.loadMediaBufferMillis(context, wireless = true))
     }
