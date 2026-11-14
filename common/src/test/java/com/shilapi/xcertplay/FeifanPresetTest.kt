@@ -42,10 +42,11 @@ class FeifanPresetTest {
         assertEquals(CarPlaySize.DEFAULT.widthMillimeters, AirPlayPersistence.loadWidthPhysicalMm(context))
     }
 
-    @Test fun thePresetStartsAnUnchosenWirelessMusicBufferAtTheMostStablePreset() {
-        // The F7's car hotspot shows 250–460 ms radio gaps; 300 ms rebuffers there.
+    @Test fun thePresetStartsAnUnchosenWirelessMusicBufferAt500Ms() {
+        // 500 ms held the F7's 250–460 ms radio gaps; a 1000 ms start level made the sender's
+        // first /feedback read "received 750 ms, played 0" and restart the stream in a loop.
         FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
-        assertEquals(1000, AirPlayPersistence.loadMediaBufferMillis(context, wireless = true))
+        assertEquals(500, AirPlayPersistence.loadMediaBufferMillis(context, wireless = true))
     }
 
     @Test fun aDriverChosenMusicBufferBeatsThePresetDefault() {

@@ -101,10 +101,13 @@ ADB extras in Settings instead.
   (channel 36), but RISING OS keeps a disconnected Wi-Fi client scanning beside it on the same
   radio. Field audio shows link stalls in a ~10 s rhythm with peaks to 1.9 s and packet loss
   (up to 72 frames). Since 0.2.29-r1 the BYD Wi-Fi Direct scan pause also runs for these
-  hotspot sessions while the Feifan preset is on (needs DiPlay's ADB key approved once). A
-  second field session still showed two rebuffers per 10 min on the raw link; for the strongest
-  music fix also enable **Buffered music** (Settings → Display, experimental): Apple Music then
-  arrives pre-buffered over TCP and short radio gaps are not heard at all.
+  hotspot sessions while the Feifan preset is on (needs DiPlay's ADB key approved once); that
+  removed the 1–2 s stalls. The wireless music buffer default under the preset is 500 ms:
+  0.2.28 briefly used 1000 ms, but a start level that large answers the sender's first
+  /feedback (~0.35 s in) with "received 750 ms, played 0", and the sender then restarts the
+  audio stream in a play/pause loop (measured: 24 rebuilds in two minutes). For music that
+  survives any radio gap also enable **Buffered music** (Settings → Display, experimental):
+  Apple Music then arrives pre-buffered over TCP and short radio gaps are not heard at all.
 - **Wired is blocked by firmware VPN consent**: the dialog opens and auto-denies within ~2 s,
   and unlike the Geely E8 case, `appops set … ACTIVATE_VPN allow` does not satisfy
   `VpnService.prepare()` on this Android 9 build — DiPlay's own ADB allowance runs (`access=

@@ -30,6 +30,11 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
   same radio; field audio shows ~10 s-rhythm link stalls up to 1.9 s with packet loss on the
   5 GHz hotspot. The existing BYD Wi-Fi Direct scan pause runs for those hotspot sessions too,
   through the already-approved local ADB.
+- The Feifan wireless music buffer default is 500 ms (0.2.28 had raised it to 1000 ms).
+  A 1000 ms start level reports "received 750 ms, played 0" on the sender's first
+  /feedback (~0.35 s in), and the sender then restarts the audio stream every few
+  seconds - heard as constant play/pause cycling (measured: 24 stream rebuilds in two
+  minutes). 500 ms held the car's 250–460 ms radio gaps in the same field reports.
 - While the Feifan preset is on, an unchosen wireless music buffer now starts at 1000 ms
   instead of 300 ms: the F7's car hotspot shows 250–460 ms radio gaps in field reports, and
   the 500 ms buffer that held there sits too close to the peaks. A saved driver choice always

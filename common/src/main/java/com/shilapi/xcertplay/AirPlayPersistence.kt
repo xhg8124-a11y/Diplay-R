@@ -696,13 +696,15 @@ object AirPlayPersistence {
     /** Music buffer for the session's transport. Wireless and wired USB have separate settings. */
     fun loadMediaBufferMillis(context: Context, wireless: Boolean): Int {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        // Field reports on the Feifan F7's car hotspot show 250–460 ms radio gaps; the stock
-        // 300 ms wireless default rebuffers there, so an unchosen buffer starts at the most
-        // stable preset while the preset is active. A saved driver choice always wins.
+        // Field reports on the Feifan F7's car hotspot show 250–460 ms radio gaps, so the stock
+        // 300 ms wireless default rebuffers there; 500 ms held in the same reports (stream stable,
+        // no rebuffer). A larger start level must not be the default: the sender's first /feedback
+        // (~0.35 s in) treats "received 750 ms, played 0" as a stalled receiver and restarts the
+        // audio stream every few seconds (observed as play/pause cycling with 1000 ms).
         val default = if (wireless && !prefs.contains(KEY_MEDIA_BUFFER_MS) &&
             FeifanHeadUnit.active(context)
         ) {
-            com.shilapi.xcertplay.media.MediaAudioBuffer.MOST_STABLE_MILLIS
+            500
         } else {
             com.shilapi.xcertplay.media.MediaAudioBuffer.DEFAULT_MILLIS
         }
