@@ -6,6 +6,10 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 
 ## Unreleased
 
+- An unreadable rotated capture source now moves to the next candidate instead of ending
+  capture for the rest of the call: on the Feifan F7, plain MIC fails every read with
+  ERROR_INVALID_OPERATION in call mode, which previously stranded the microphone after
+  the silent-source rotation reached it.
 - A microphone source that delivers only zeros is rotated to the next capture source
   after 3 s (VOICE_COMMUNICATION, MIC, VOICE_RECOGNITION), mirroring the Geely
   voice-recognition fix in the opposite direction. Measured on the Feifan F7: a whole

@@ -328,6 +328,21 @@ internal class MicrophoneUplink(
                         stats.restarted(readRestarts, "read-error", routeType(current))
                         continue
                     }
+                    // A rotated source can be unreadable outright (the Feifan F7 fails plain MIC
+                    // with ERROR_INVALID_OPERATION in call mode); move to the next candidate
+                    // instead of ending capture for the rest of the call.
+                    if (running.get() && silentRotations < nextSources.size) {
+                        val nextSource = nextSources[silentRotations]
+                        silentRotations++
+                        val rebuilt = rebuildWithSource(current, nextSource)
+                        if (rebuilt != null) {
+                            current = rebuilt
+                            ownSession = rebuilt.audioSessionId
+                            stats.useSource(nextSource)
+                            stats.restarted(silentRotations, "read-error-source", routeType(rebuilt))
+                            continue
+                        }
+                    }
                     return
                 }
                 if (count == 0) {

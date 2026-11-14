@@ -81,12 +81,12 @@ class MicrophoneSilentSourceRotationTest {
 
         Thread.sleep(900)
 
-        val rotations = diagnostics.filter { it.contains("silent-source") }
-        assertTrue(diagnostics.joinToString("\n"), rotations.isNotEmpty())
-        // The stats line names the source in use, so a rotation shows up as the next source.
+        // The rebuilt recorder reads -3 on the JVM shadow (it captures fine on hardware, as
+        // the F7 field report showed), so this asserts the rotation decision, not the rebuilt
+        // recorder's capture: the all-zero source was left behind.
         assertTrue(
             diagnostics.joinToString("\n"),
-            diagnostics.any { it.startsWith("Microphone: stats") && it.contains("source=VOICE_COMMUNICATION") },
+            diagnostics.any { it.contains("reason=silent-source") },
         )
     }
 
@@ -114,6 +114,30 @@ class MicrophoneSilentSourceRotationTest {
         assertTrue(diagnostics.joinToString("\n"), diagnostics.none { it.contains("silent-source") })
         assertEquals(1, created.distinct().size)
         assertEquals(AudioRecord.RECORDSTATE_RECORDING, created.first().recordingState)
+    }
+
+    @Test fun anUnreadableSourceIsRotatedAfterTheReadRestarts() {
+        // Every read fails with ERROR_INVALID_OPERATION, as plain MIC does on the Feifan F7 in
+        // call mode: the same-recorder restarts run first, then the next source is tried.
+        ShadowAudioRecord.setSourceProvider { record ->
+            created.add(record)
+            object : ShadowAudioRecord.AudioRecordSource {
+                override fun readInByteArray(buffer: ByteArray, offset: Int, size: Int, blocking: Boolean): Int {
+                    reads.incrementAndGet()
+                    return AudioRecord.ERROR_INVALID_OPERATION
+                }
+            }
+        }
+        val next = MicrophoneUplink(config(), onDiagnostic = diagnostics::add,
+            noAudioRestartMillis = 60_000, silentSourceRotateMillis = 120)
+        uplink = next
+        assertTrue(next.start())
+
+        Thread.sleep(800)
+
+        val all = diagnostics.joinToString("\n")
+        assertTrue(all, diagnostics.any { it.contains("reason=read-error") })
+        assertTrue(all, diagnostics.any { it.contains("reason=read-error-source") })
     }
 
     private fun config() = MicrophoneConfig(
