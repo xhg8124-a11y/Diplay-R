@@ -122,6 +122,18 @@ ADB extras in Settings instead.
   phone connected to the car hotspot (`adb connect 192.168.43.1:5555`):
   `adb shell appops set com.shihab.diplay ACTIVATE_VPN allow`, then replug the iPhone.
 
+## Audio channels and separate volumes
+
+Measured on the car: RISING OS runs the Android Automotive audio zones with four volume
+groups - media (BUS00), phone (BUS03/06), alarms/notifications (BUS01) and
+navigation+voice (BUS04_NAVI_TTS / BUS05_TTS). Routing follows the audio usage, and DiPlay
+already lands correctly with **Navigation channel = 0 (automatic)**: music plays as
+USAGE_MEDIA into the media group, navigation prompts as USAGE_ASSISTANCE_NAVIGATION_
+GUIDANCE into the navigation group (captured live on the car), and Siri joins the
+navigation group through BUS05. That means the car's own volume UI adjusts navigation and
+music independently - keep the DiPlay navigation channel on 0; picking one of the legacy
+streams in the 1–20 grid bypasses the zones and merges prompts into the media volume.
+
 ## What is still unknown
 
 These need reports from real cars before they can be turned on by default. Export a diagnostic
