@@ -3,6 +3,7 @@ package com.shilapi.xcertplay.network
 import android.content.Context
 import com.shilapi.xcertplay.adb.LocalAdb
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -50,6 +51,14 @@ class WifiScanPauseTest {
                     backend == WirelessHotspotBackend.WIFI_P2P && sdk >= 25, WifiScanPause.eligible(backend, sdk))
             }
         }
+    }
+
+    @Test
+    fun theFeifanHotspotRulePausesOnlyWhenMarked() {
+        // RISING OS keeps a disconnected client scanning beside the hotspot on the same radio.
+        assertTrue(WifiScanPause.eligible(WirelessHotspotBackend.MANUAL_HOTSPOT, 28, manualHotspotScanInterferes = true))
+        assertFalse(WifiScanPause.eligible(WirelessHotspotBackend.MANUAL_HOTSPOT, 28, manualHotspotScanInterferes = false))
+        assertFalse(WifiScanPause.eligible(WirelessHotspotBackend.MANUAL_HOTSPOT, 24, manualHotspotScanInterferes = true))
     }
 
     @Test

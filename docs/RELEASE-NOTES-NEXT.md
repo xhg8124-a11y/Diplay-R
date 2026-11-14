@@ -25,6 +25,11 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
   RISING OS, ~2 s without a tap) now also runs the ADB allowance and shows the
   `appops set … ACTIVATE_VPN allow` command on the CarPlay screen, instead of stopping at
   "VPN consent was denied".
+- Wi-Fi scan pause now also covers manual-hotspot sessions while the Feifan preset is on.
+  The F7's RISING OS runs its hotspot beside a disconnected, still-scanning Wi-Fi client on the
+  same radio; field audio shows ~10 s-rhythm link stalls up to 1.9 s with packet loss on the
+  5 GHz hotspot. The existing BYD Wi-Fi Direct scan pause runs for those hotspot sessions too,
+  through the already-approved local ADB.
 - While the Feifan preset is on, an unchosen wireless music buffer now starts at 1000 ms
   instead of 300 ms: the F7's car hotspot shows 250–460 ms radio gaps in field reports, and
   the 500 ms buffer that held there sits too close to the peaks. A saved driver choice always

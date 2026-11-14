@@ -17,7 +17,9 @@ import java.util.concurrent.TimeUnit
  * network, BYD firmware searches every band every 10 s (seen on DiLink 3, 4 and 5). The single radio
  * leaves the CarPlay channel for each search, and the iPhone's audio packets sent meanwhile are lost,
  * so music and voice stutter on a 10 s rhythm. The built-in car hotspot runs with the client off and
- * is not affected, and Same LAN needs the search, so only Wi-Fi Direct sessions pause it.
+ * is not affected, and Same LAN needs the search, so only Wi-Fi Direct sessions pause it. The Feifan
+ * F7 is the measured exception: its hotspot runs beside a disconnected, still-scanning client, so
+ * hotspot sessions pause the search there too ([WifiScanPause.eligible]).
  *
  * Android offers apps no way to do this. Through the approved local adb shell, [WifiScanPauseMain]
  * runs as the shell user and turns off the framework's automatic joining, which stops these scans:
@@ -58,8 +60,18 @@ internal class WifiScanPause(
         /** app_process start-up on a slow head unit plus the helper's own deadline. */
         internal const val HELPER_TIMEOUT_MS = 15_000
 
-        fun eligible(backend: WirelessHotspotBackend, sdk: Int = Build.VERSION.SDK_INT): Boolean =
-            backend == WirelessHotspotBackend.WIFI_P2P && sdk >= Build.VERSION_CODES.N_MR1
+        fun eligible(
+            backend: WirelessHotspotBackend,
+            sdk: Int = Build.VERSION.SDK_INT,
+            manualHotspotScanInterferes: Boolean = false,
+        ): Boolean = sdk >= Build.VERSION_CODES.N_MR1 && (
+            backend == WirelessHotspotBackend.WIFI_P2P ||
+                // The Feifan F7's RISING OS keeps its disconnected Wi-Fi client scanning beside
+                // the hotspot on the same radio: field reports show ~10 s-rhythm stalls up to
+                // 1.9 s with packet loss on the 5 GHz hotspot link. BYD hotspots run with the
+                // client off and stay on the Wi-Fi Direct-only rule.
+                (backend == WirelessHotspotBackend.MANUAL_HOTSPOT && manualHotspotScanInterferes)
+            )
 
         fun restoreIfNeeded(context: Context) = ProcessWifiScanPause.recover(context.applicationContext)
 
