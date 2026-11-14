@@ -6,6 +6,8 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 
 ## Unreleased
 
+- The CarPlay car button label defaults to 飞凡 under the Feifan preset (upstream default
+  is BYD); a saved label always wins.
 - Under the Feifan preset the CarPlay app-list car button now shows the Rising Auto R
   mark instead of the stock car glyph (a custom image still wins; changes apply at the
   next connection).

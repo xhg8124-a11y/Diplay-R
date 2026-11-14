@@ -55,6 +55,14 @@ class FeifanPresetTest {
         assertEquals(500, AirPlayPersistence.loadMediaBufferMillis(context, wireless = true))
     }
 
+    @Test fun thePresetNamesTheCarButtonFeifan() {
+        assertEquals("BYD", AirPlayPersistence.loadOemLabel(context))
+        FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
+        assertEquals("飞凡", AirPlayPersistence.loadOemLabel(context))
+        AirPlayPersistence.saveOemLabel(context, "我的F7")
+        assertEquals("我的F7", AirPlayPersistence.loadOemLabel(context))
+    }
+
     @Test fun thePresetSwapsTheCarButtonIconForTheFeifanMark() {
         assertEquals(com.shilapi.xcertplay.host.R.raw.ic_car_home, AirPlayPersistence.defaultCarButtonIcon(context))
         FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)

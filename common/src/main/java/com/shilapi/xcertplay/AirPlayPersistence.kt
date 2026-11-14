@@ -147,6 +147,9 @@ object AirPlayPersistence {
     const val DEFAULT_MANUFACTURER = "DiPlay"
     const val DEFAULT_MODEL = "DiPlay"
     const val DEFAULT_OEM_LABEL = "BYD"
+
+    /** The car button's label next to the Rising Auto R mark under the Feifan preset. */
+    const val FEIFAN_OEM_LABEL = "飞凡"
     const val DEFAULT_MFI_I2C_PATH = "/dev/i2c-1"
 
     fun loadAmbientDelaySeconds(context: Context): Int =
@@ -642,11 +645,18 @@ object AirPlayPersistence {
             .apply()
     }
 
-    fun loadOemLabel(context: Context): String =
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getString(KEY_OEM_LABEL, DEFAULT_OEM_LABEL)
-            // iOS hides the car icon without a label.
-            .orEmpty().ifBlank { DEFAULT_OEM_LABEL }
+    fun loadOemLabel(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        // iOS hides the car icon without a label. Under the Feifan preset an unchosen label
+        // names the car's brand beside the R mark instead of upstream's BYD default.
+        val default = if (!prefs.contains(KEY_OEM_LABEL) && FeifanHeadUnit.active(context)) {
+            FEIFAN_OEM_LABEL
+        } else {
+            DEFAULT_OEM_LABEL
+        }
+        return prefs.getString(KEY_OEM_LABEL, default)
+            .orEmpty().ifBlank { default }
+    }
 
     fun saveOemLabel(context: Context, oemLabel: String) {
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()

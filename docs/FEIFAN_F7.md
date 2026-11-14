@@ -125,8 +125,9 @@ ADB extras in Settings instead.
 ## CarPlay car button
 
 Under the Feifan preset (since 0.2.33-r1) the "back to the car" button in CarPlay's app
-list shows the Rising Auto R mark instead of the stock car glyph (Settings → Vehicle →
-Car button in CarPlay previews it; a custom image always wins). The mark belongs to
+list shows the Rising Auto R mark instead of the stock car glyph, and (since 0.2.34-r1)
+its label defaults to 飞凡 instead of upstream's BYD (Settings → Vehicle → Car button in
+CarPlay previews both; a custom image and a saved label always win). The mark belongs to
 Rising Auto / SAIC and ships in this community fork for the owner's car only.
 
 ## Audio channels and separate volumes
