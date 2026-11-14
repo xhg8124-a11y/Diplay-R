@@ -25,3 +25,7 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
   RISING OS, ~2 s without a tap) now also runs the ADB allowance and shows the
   `appops set … ACTIVATE_VPN allow` command on the CarPlay screen, instead of stopping at
   "VPN consent was denied".
+- While the Feifan preset is on, an unchosen wireless music buffer now starts at 1000 ms
+  instead of 300 ms: the F7's car hotspot shows 250–460 ms radio gaps in field reports, and
+  the 500 ms buffer that held there sits too close to the peaks. A saved driver choice always
+  wins.

@@ -97,6 +97,12 @@ ADB extras in Settings instead.
   22–26 fps with hardware decode p50=51 ms, media (AAC) with zero underruns, navigation prompts
   (Opus) audible, and the **dashboard map running at the same time** (1600x600 on a 1920x720
   presentation display, 17–29 fps). The car also keeps its own cellular internet (vlan8).
+- **Audio stutter over the car hotspot**: the measured link shows 12–14 receive gaps over
+  250 ms per 5 s window with peaks to 460 ms (2.4 GHz interference). The 500 ms music buffer
+  held (underruns 0), navigation prompts did not (up to 21 sequence gaps per window). Since
+  0.2.28-r1 an unchosen wireless music buffer starts at 1000 ms while the Feifan preset is on.
+  For the strongest fix also enable **Buffered music** (Settings → Display, experimental):
+  Apple Music then arrives pre-buffered over TCP and short radio gaps are not heard at all.
 - **Wired is blocked by firmware VPN consent**: the dialog opens and auto-denies within ~2 s,
   and unlike the Geely E8 case, `appops set … ACTIVATE_VPN allow` does not satisfy
   `VpnService.prepare()` on this Android 9 build — DiPlay's own ADB allowance runs (`access=
