@@ -17,6 +17,7 @@ import com.shilapi.xcertplay.orchestration.ManualHotspotBand
 import com.shilapi.xcertplay.orchestration.ManualHotspotSecurity
 import com.shilapi.xcertplay.orchestration.MfiTarget
 import com.shilapi.xcertplay.orchestration.WirelessHotspotMode
+import com.shilapi.xcertplay.host.R
 import com.shilapi.xcertplay.network.FeifanHeadUnit
 import com.shilapi.xcertplay.network.WifiP2pChannels
 import com.shilapi.xcertplay.transport.LockdownPairRecord
@@ -727,6 +728,13 @@ object AirPlayPersistence {
             com.shilapi.xcertplay.media.MediaAudioBuffer.sanitizeWired(prefs.getInt(KEY_WIRED_MEDIA_BUFFER_MS, shared))
         }
     }
+
+    /**
+     * The CarPlay app-list car button. The Feifan preset swaps the stock car glyph for the
+     * Rising Auto R mark the driver picked; a custom image always wins over both.
+     */
+    fun defaultCarButtonIcon(context: Context): Int =
+        if (FeifanHeadUnit.active(context)) R.raw.ic_car_feifan else R.raw.ic_car_home
 
     /** CarPlay's buffered music (Apple Music sends ahead over TCP); off by default, applies at reconnect. */
     fun loadMainBufferedAudio(context: Context): Boolean =

@@ -55,6 +55,12 @@ class FeifanPresetTest {
         assertEquals(500, AirPlayPersistence.loadMediaBufferMillis(context, wireless = true))
     }
 
+    @Test fun thePresetSwapsTheCarButtonIconForTheFeifanMark() {
+        assertEquals(com.shilapi.xcertplay.host.R.raw.ic_car_home, AirPlayPersistence.defaultCarButtonIcon(context))
+        FeifanHeadUnit.savePreset(context, FeifanHeadUnit.Preset.ON)
+        assertEquals(com.shilapi.xcertplay.host.R.raw.ic_car_feifan, AirPlayPersistence.defaultCarButtonIcon(context))
+    }
+
     @Test fun thePresetTurnsOnTheAudioFocusPair() {
         // Field-tested on the F7: with focus on, prompts claim it while speaking and the
         // volume knob follows them; calls duck the music through auto-yield (default on).

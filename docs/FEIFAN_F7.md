@@ -122,6 +122,13 @@ ADB extras in Settings instead.
   phone connected to the car hotspot (`adb connect 192.168.43.1:5555`):
   `adb shell appops set com.shihab.diplay ACTIVATE_VPN allow`, then replug the iPhone.
 
+## CarPlay car button
+
+Under the Feifan preset (since 0.2.33-r1) the "back to the car" button in CarPlay's app
+list shows the Rising Auto R mark instead of the stock car glyph (Settings → Vehicle →
+Car button in CarPlay previews it; a custom image always wins). The mark belongs to
+Rising Auto / SAIC and ships in this community fork for the owner's car only.
+
 ## Audio channels and separate volumes
 
 Measured on the car: RISING OS runs the Android Automotive audio zones with four volume

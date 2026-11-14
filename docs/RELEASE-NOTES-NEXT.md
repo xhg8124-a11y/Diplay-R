@@ -6,6 +6,9 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 
 ## Unreleased
 
+- Under the Feifan preset the CarPlay app-list car button now shows the Rising Auto R
+  mark instead of the stock car glyph (a custom image still wins; changes apply at the
+  next connection).
 - Under the Feifan preset the audio-focus toggles now default on (Advanced: audio focus,
   navigation prompts request focus; auto-yield was already on). Field-tested on the F7:
   the volume knob follows the focus holder, so a speaking prompt gets the knob and calls

@@ -5161,8 +5161,9 @@ open class CarPlayHostActivity : ComponentActivity() {
     }
 
     private fun defaultAirPlayIconBytes(): ByteArray =
-        // Shown in CarPlay's app list as the "back to the car" button.
-        resources.openRawResource(R.raw.ic_car_home).use { it.readBytes() }
+        // Shown in CarPlay's app list as the "back to the car" button. Under the Feifan
+        // preset this is the Rising Auto R mark; a custom image wins over both defaults.
+        resources.openRawResource(AirPlayPersistence.defaultCarButtonIcon(this)).use { it.readBytes() }
 
     private fun updateAirPlayIconPreview() {
         val preview = iconPreviewView ?: return
