@@ -122,6 +122,17 @@ ADB extras in Settings instead.
   phone connected to the car hotspot (`adb connect 192.168.43.1:5555`):
   `adb shell appops set com.shihab.diplay ACTIVATE_VPN allow`, then replug the iPhone.
 
+## Microphone (calls, Siri)
+
+Measured on a call (0.2.33-r1): the whole uplink chain was healthy - permission, capture
+(reads with zero errors), Opus encode, UDP send - but `peakDbfs=silent`: every sample was
+zero. A system service (`com.saic.service.batterychange`) holds the microphone permanently
+with VOICE_RECOGNITION and MIC captures, and RISING OS fed the app's VOICE_COMMUNICATION
+capture zeros beside it. Since 0.2.35-r1 a source that delivers only zeros for 3 s is
+rotated (VOICE_COMMUNICATION → MIC → VOICE_RECOGNITION); the diagnostic report names the
+source that finally carries sound. If every source stays silent, the firmware gives
+third-party apps no microphone at all and voice input cannot work on this build.
+
 ## CarPlay car button
 
 Under the Feifan preset (since 0.2.33-r1) the "back to the car" button in CarPlay's app

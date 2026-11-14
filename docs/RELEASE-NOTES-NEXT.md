@@ -6,6 +6,11 @@ No unreleased changes are recorded yet. Add future unreleased changes here.
 
 ## Unreleased
 
+- A microphone source that delivers only zeros is rotated to the next capture source
+  after 3 s (VOICE_COMMUNICATION, MIC, VOICE_RECOGNITION), mirroring the Geely
+  voice-recognition fix in the opposite direction. Measured on the Feifan F7: a whole
+  call ran with healthy reads, encodes and sends while every sample was zero under a
+  system service that holds the microphone. The report names the source that works.
 - The CarPlay car button label defaults to 飞凡 under the Feifan preset (upstream default
   is BYD); a saved label always wins.
 - Under the Feifan preset the CarPlay app-list car button now shows the Rising Auto R

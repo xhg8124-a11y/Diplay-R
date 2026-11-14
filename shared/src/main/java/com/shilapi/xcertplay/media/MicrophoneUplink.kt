@@ -44,6 +44,8 @@ internal class MicrophoneUplink(
         )
     },
     private val noAudioRestartMillis: Long = NO_AUDIO_RESTART_MILLIS,
+    /** Whole all-zero seconds after which the next capture source is tried; see [silentSourceRotation]. */
+    private val silentSourceRotateMillis: Long = SILENT_SOURCE_ROTATE_MILLIS,
     /** Read for a report window that recorded no sound; see [silenceDetail]. */
     private val audioManager: AudioManager? = null,
 ) : Closeable {
@@ -56,6 +58,9 @@ internal class MicrophoneUplink(
     @Volatile private var socket: DatagramSocket? = null
     @Volatile private var opusEncoder: MicrophoneOpusEncoder? = null
     @Volatile private var effects: List<AudioEffect> = emptyList()
+    @Volatile private var activeSource: Int = Int.MIN_VALUE
+    private var builtChannelMask: Int = 0
+    private var builtBufferBytes: Int = 0
     @Volatile private var echoCanceller: CallEchoCanceller? = null
     private var thread: Thread? = null
 
@@ -114,14 +119,16 @@ internal class MicrophoneUplink(
             runCatching { onDiagnostic(message) }
         }
         val bufferSize = maxOf(minBuffer * 2, config.frameBytes * 4)
+        builtChannelMask = channelMask
+        builtBufferBytes = bufferSize
+        activeSource = source
         // Some head units throw on VOICE_RECOGNITION at build(); VOICE_COMMUNICATION works there.
-        val nextRecorder = createRecorder(source, channelMask, bufferSize)
-            ?: if (source == MediaRecorder.AudioSource.VOICE_RECOGNITION) {
-                stats.useSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
-                createRecorder(MediaRecorder.AudioSource.VOICE_COMMUNICATION, channelMask, bufferSize)
-            } else {
-                null
-            }
+        var nextRecorder = createRecorder(source, channelMask, bufferSize)
+        if (nextRecorder == null && source == MediaRecorder.AudioSource.VOICE_RECOGNITION) {
+            stats.useSource(MediaRecorder.AudioSource.VOICE_COMMUNICATION)
+            activeSource = MediaRecorder.AudioSource.VOICE_COMMUNICATION
+            nextRecorder = createRecorder(MediaRecorder.AudioSource.VOICE_COMMUNICATION, channelMask, bufferSize)
+        }
         if (nextRecorder == null) {
             nextEncoder?.close()
             running.set(false)
@@ -282,9 +289,17 @@ internal class MicrophoneUplink(
         val frame = ByteArray(config.frameBytes)
         val readBuffer = ByteArray(maxOf(frame.size, MIN_READ_BYTES))
         val counters = MicrophoneCounters()
-        val routeInfo = { routeType(recorder) }
-        val ownSession = recorder.audioSessionId
+        var current = recorder
+        val routeInfo = { routeType(current) }
+        var ownSession = recorder.audioSessionId
         val silence = audioManager?.let { manager -> { silenceDetail(manager, ownSession) } }
+        // Some firmwares feed real audio to exactly one capture source and zeros to the rest
+        // (measured on the Feifan F7: every standard source stayed silent through a whole call
+        // while a system service held the microphone). Rotate to the next source once the
+        // current one delivers nothing but zeros; the stats line names the source that worked.
+        val nextSources = silentSourceRotation(activeSource)
+        var silentRotations = 0
+        var lastSoundNs = System.nanoTime()
         var canceller = echoCanceller
         val clock = canceller?.let { CaptureClock(config.sampleRate) }
         val reference = canceller?.let { ShortArray(it.frameSamples) }
@@ -297,7 +312,7 @@ internal class MicrophoneUplink(
                 stats.reading()
                 val count = recorder.read(readBuffer, 0, readBuffer.size, AudioRecord.READ_BLOCKING)
                 stats.read(count)
-                if (count > 0) clock?.read(recorder, count / 2)
+                if (count > 0) clock?.read(current, count / 2)
                 if (count < 0) {
                     if (running.get()) {
                         Log.e(TAG, "microphone read failed code=$count")
@@ -307,10 +322,10 @@ internal class MicrophoneUplink(
                     // ERROR_INVALID_OPERATION, and capture used to end there for the whole call
                     // (#647). Restart recording a few times before giving up.
                     if (running.get() && count != AudioRecord.ERROR_DEAD_OBJECT &&
-                        readRestarts < MAX_READ_RESTARTS && restartRecording(recorder)
+                        readRestarts < MAX_READ_RESTARTS && restartRecording(current)
                     ) {
                         readRestarts++
-                        stats.restarted(readRestarts, "read-error", routeType(recorder))
+                        stats.restarted(readRestarts, "read-error", routeType(current))
                         continue
                     }
                     return
@@ -326,15 +341,31 @@ internal class MicrophoneUplink(
                     ) {
                         noAudioRestarts++
                         lastAudioNs = now
-                        if (restartRecording(recorder)) {
-                            stats.restarted(noAudioRestarts, "no-audio", routeType(recorder))
+                        if (restartRecording(current)) {
+                            stats.restarted(noAudioRestarts, "no-audio", routeType(current))
                         } else {
-                            stats.failure(MicrophoneFailureStage.RECORDING, code = recorder.recordingState)
+                            stats.failure(MicrophoneFailureStage.RECORDING, code = current.recordingState)
                         }
                     } else {
                         Thread.sleep(EMPTY_READ_PAUSE_MILLIS)
                     }
                     continue
+                }
+                if (bufferCarriesSound(readBuffer, count)) {
+                    lastSoundNs = System.nanoTime()
+                } else if (running.get() && silentRotations < nextSources.size &&
+                    System.nanoTime() - lastSoundNs >= silentSourceRotateMillis * 1_000_000L
+                ) {
+                    val nextSource = nextSources[silentRotations]
+                    silentRotations++
+                    val rebuilt = rebuildWithSource(current, nextSource)
+                    if (rebuilt != null) {
+                        current = rebuilt
+                        ownSession = rebuilt.audioSessionId
+                        stats.useSource(nextSource)
+                        stats.restarted(silentRotations, "silent-source", routeType(rebuilt))
+                        continue
+                    }
                 }
                 lastAudioNs = System.nanoTime()
                 var offset = 0
@@ -387,6 +418,25 @@ internal class MicrophoneUplink(
         recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING
     } catch (error: IllegalStateException) {
         false
+    }
+
+    /** Stops [old] and builds a started recorder for [source]; on failure the old one keeps running. */
+    private fun rebuildWithSource(old: AudioRecord, source: Int): AudioRecord? {
+        runCatching { old.stop() }
+        Thread.sleep(READ_RESTART_PAUSE_MILLIS)
+        val next = createRecorder(source, builtChannelMask, builtBufferBytes)
+        if (next != null) {
+            try {
+                next.startRecording()
+                if (next.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+                    old.release()
+                    return next
+                }
+            } catch (_: IllegalStateException) {
+            }
+            next.release()
+        }
+        return if (restartRecording(old)) old else null
     }
 
     private fun sendFrame(socket: DatagramSocket, counters: MicrophoneCounters, frame: ByteArray) {
@@ -532,6 +582,9 @@ internal class MicrophoneUplink(
         const val MAX_READ_RESTARTS = 3
         const val READ_RESTART_PAUSE_MILLIS = 50L
         const val NO_AUDIO_RESTART_MILLIS = 1_000L
+
+        /** All-zero seconds on one source before the next capture source is tried. */
+        private const val SILENT_SOURCE_ROTATE_MILLIS = 3_000L
         const val MAX_NO_AUDIO_RESTARTS = 3
         const val EMPTY_READ_PAUSE_MILLIS = 5L
         const val MAX_LISTED_RECORDINGS = 4
@@ -545,6 +598,31 @@ internal class MicrophoneUplink(
  * service ends up with, gives a normal level with no clipping, and the car still suppresses the far end's
  * echo on it. Geely/Lynk head units record silence on VOICE_RECOGNITION, so they keep the old choice.
  */
+/**
+ * Capture sources to try after [current] proves silent, in order. Firmwares differ in the one
+ * source they feed: Geely records silence on VOICE_RECOGNITION, and the Feifan F7 returned
+ * zeros on every standard source during a call while a system service held the microphone.
+ */
+internal fun silentSourceRotation(current: Int): List<Int> {
+    val order = listOf(
+        MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+        MediaRecorder.AudioSource.MIC,
+        MediaRecorder.AudioSource.VOICE_RECOGNITION,
+    )
+    val position = order.indexOf(current).takeIf { it >= 0 } ?: return order
+    return order.drop(position + 1) + order.take(position)
+}
+
+/** True when any 16-bit sample in the buffer is non-zero: both bytes of a real sample pair. */
+internal fun bufferCarriesSound(buffer: ByteArray, count: Int): Boolean {
+    var index = 0
+    while (index + 1 < count) {
+        if (buffer[index].toInt() != 0 || buffer[index + 1].toInt() != 0) return true
+        index += 2
+    }
+    return false
+}
+
 internal fun telephonyMicrophoneSource(speakerphoneCall: Boolean, carPhoneState: Boolean, geelyHeadUnit: Boolean): Int = when {
     carPhoneState && !geelyHeadUnit -> MediaRecorder.AudioSource.VOICE_RECOGNITION
     speakerphoneCall -> MediaRecorder.AudioSource.MIC
